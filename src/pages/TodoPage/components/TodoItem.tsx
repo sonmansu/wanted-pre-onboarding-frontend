@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Todo } from "../utils/types";
 import { deleteTodo, updateTodo } from "api/lib/todo";
 import styled from "styled-components";
+import { COLOR, FONT_SIZE } from "styles/constants";
 
 interface TodoItemProps extends Todo {
     // userId: number;
@@ -24,7 +25,6 @@ export const TodoItem: React.FC<TodoItemProps> = ({
 
     const handleClickModify = () => {
         setIsInModify((prevState) => !prevState);
-        inputRef.current?.focus(); // TODO focus가 안됨
     };
 
     const handleSave = async () => {
@@ -67,6 +67,13 @@ export const TodoItem: React.FC<TodoItemProps> = ({
         console.log("response(delete):>> ", response);
         onUpdate();
     };
+
+    useEffect(() => {
+        if (isInModify) {
+            inputRef.current?.focus();
+        }
+    }, [isInModify]);
+
     return isInModify ? (
         <ListItem key={id}>
             <Label>
@@ -75,7 +82,8 @@ export const TodoItem: React.FC<TodoItemProps> = ({
                     defaultChecked={isCompleted}
                     onClick={handleCheck}
                 />
-                <input
+                <ModifyInput
+                    type="text"
                     ref={inputRef}
                     data-testid="modify-input"
                     value={modifiedInput}
@@ -138,31 +146,41 @@ const Label = styled.label`
 const CheckBox = styled.input`
     width: 20px;
     height: 20px;
-    accent-color: orange;
+    /* accent-color: ${COLOR.grey[400]}; */
 
     margin-right: 10px;
 
     &:checked + span {
         text-decoration: line-through;
+        color: ${COLOR.grey[300]};
     }
 `;
 
 const Text = styled.span`
-    flex: 1;
+    flex: 0.9;
+    font-size: ${FONT_SIZE.m2};
+`;
+
+const ModifyInput = styled.input`
+    flex: 0.9;
+    font-size: ${FONT_SIZE.m2};
 `;
 
 const Button = styled.button`
     padding: 5px 7px;
-    border: 1px solid #ff8d4e;
+    /* border: 1px solid #ff8d4e; */
     border-radius: 5px;
 
-    color: orange;
+    background-color: ${COLOR.grey[200]};
+
+    /* color: white; */
+    font-size: ${FONT_SIZE.s3};
 
     & + & {
         margin-left: 10px;
     }
 
     &:hover {
-        filter: brightness(90%);
+        filter: brightness(80%);
     }
 `;
