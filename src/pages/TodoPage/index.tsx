@@ -4,8 +4,9 @@ import { Todo } from "./utils/types";
 import { TodoItem } from "./components/TodoItem";
 import { AuthInput, AuthTitle } from "styles/auth";
 import styled, { css } from "styled-components";
-import { PATH, TOKEN } from "common/utils/constants";
 import { useNavigate } from "react-router-dom";
+import { PATH, TOKEN } from "common/utils/constants";
+import { COLOR, FONT_SIZE } from "styles/constants";
 
 export const TodoPage: React.FC = () => {
     const navigate = useNavigate();
@@ -32,11 +33,17 @@ export const TodoPage: React.FC = () => {
         setNewTodoInput(e.currentTarget.value);
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem(TOKEN);
+        navigate(`/${PATH.signIn}`);
+    };
+
     useEffect(() => {
         (async function () {
             const response = await getTodos();
             console.log("response(getTodo):>> ", response);
             setTodos(response.data);
+            // 401 응답: Unauthorizaed - 로그인 토큰 잘못된 경우
         })();
     }, [todoUpdated]);
 
@@ -48,6 +55,7 @@ export const TodoPage: React.FC = () => {
 
     return (
         <Wrap>
+            <LogoutBtn onClick={handleLogout}>로그아웃</LogoutBtn>
             <ContentWrap>
                 <AuthTitle>📝 TodoList</AuthTitle>
                 <NewTodoWrap>
@@ -132,7 +140,7 @@ const AddBtn = styled.button`
     width: 56px;
     height: 50px;
 
-    background-color: orange;
+    background-color: ${COLOR.primary};
     border-radius: 8px;
 
     font-weight: 500;
@@ -142,7 +150,27 @@ const AddBtn = styled.button`
     ${({ disabled }) =>
         disabled &&
         css`
-            cursor: not-allowed;
+            cursor: default;
             background-color: #eff0f5;
         `}
+`;
+
+const LogoutBtn = styled.button`
+    width: 80px;
+    height: 40px;
+
+    background-color: ${COLOR.primary};
+    border-radius: 8px;
+
+    position: fixed;
+    top: 10px;
+    right: 10px;
+
+    font-weight: 600;
+    font-size: ${FONT_SIZE.m2};
+    color: white;
+
+    &:hover {
+        filter: brightness(90%);
+    }
 `;
