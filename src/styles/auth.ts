@@ -16,7 +16,7 @@ export const AuthTitle = styled.h1`
     margin-bottom: 50px;
 `;
 
-export const FormWrap = styled.div`
+export const FormWrap = styled.form`
     padding: 50px;
     border: 1px solid gray;
     border-radius: 8px;

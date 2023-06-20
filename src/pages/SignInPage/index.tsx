@@ -42,7 +42,10 @@ export const SignInPage: React.FC = () => {
         });
     };
 
-    const handleSignIn = async () => {
+    const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
+        event
+    ) => {
+        event.preventDefault();
         try {
             const response = await signIn(form.email, form.password);
             console.log("response (try):>> ", response);
@@ -75,7 +78,7 @@ export const SignInPage: React.FC = () => {
 
     return (
         <Wrap>
-            <FormWrap>
+            <FormWrap onSubmit={handleSubmit}>
                 <AuthTitle>로그인</AuthTitle>
                 <AuthInput
                     data-testid="email-input"
@@ -102,7 +105,6 @@ export const SignInPage: React.FC = () => {
                 <AuthBtn
                     data-testid="signin-button"
                     disabled={!isValidEmail || !isValidPassword}
-                    onClick={handleSignIn}
                 >
                     로그인
                 </AuthBtn>

@@ -42,7 +42,10 @@ export const SignUpPage: React.FC = () => {
         });
     };
 
-    const handleSignUp = async () => {
+    const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
+        event
+    ) => {
+        event.preventDefault();
         try {
             const response = await signUp(form.email, form.password);
             console.log("response :>> ", response);
@@ -68,7 +71,7 @@ export const SignUpPage: React.FC = () => {
 
     return (
         <Wrap>
-            <FormWrap>
+            <FormWrap onSubmit={handleSubmit}>
                 <AuthTitle>회원가입</AuthTitle>
                 <AuthInput
                     data-testid="email-input"
@@ -95,7 +98,6 @@ export const SignUpPage: React.FC = () => {
                 <AuthBtn
                     data-testid="signup-button"
                     disabled={!isValidEmail || !isValidPassword}
-                    onClick={handleSignUp}
                 >
                     회원가입
                 </AuthBtn>
