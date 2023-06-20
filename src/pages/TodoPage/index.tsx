@@ -4,8 +4,11 @@ import { Todo } from "./utils/types";
 import { TodoItem } from "./components/TodoItem";
 import { AuthInput, AuthTitle } from "styles/auth";
 import styled, { css } from "styled-components";
+import { PATH, TOKEN } from "common/utils/constants";
+import { useNavigate } from "react-router-dom";
 
 export const TodoPage: React.FC = () => {
+    const navigate = useNavigate();
     const [todos, setTodos] = useState<Todo[]>([]);
     const [newTodoInput, setNewTodoInput] = useState("");
     const [todoUpdated, setTodoUpdated] = useState(false);
@@ -36,6 +39,12 @@ export const TodoPage: React.FC = () => {
             setTodos(response.data);
         })();
     }, [todoUpdated]);
+
+    useEffect(() => {
+        if (!localStorage.getItem(TOKEN)) {
+            navigate(`/${PATH.signIn}`);
+        }
+    }, [navigate]);
 
     return (
         <Wrap>
