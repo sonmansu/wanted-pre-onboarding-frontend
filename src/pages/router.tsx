@@ -1,10 +1,14 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import { PATH } from "../common/utils/constants";
 import { TodoPage } from "./TodoPage";
 import { SignUpPage } from "./SignUpPage";
 import { SignInPage } from "./SignInPage";
 
 export const router = createBrowserRouter([
+    {
+        path: `/`,
+        element: <Navigate to={`/${PATH.todo}`} />,
+    },
     {
         path: `/${PATH.todo}`,
         element: <TodoPage />,
