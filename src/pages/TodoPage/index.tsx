@@ -49,6 +49,10 @@ export const TodoPage: React.FC = () => {
     };
 
     useEffect(() => {
+        if (!localStorage.getItem(TOKEN)) {
+            navigate(`/${PATH.signIn}`);
+            return;
+        }
         (async function () {
             try {
                 const response = await getTodos();
@@ -59,12 +63,6 @@ export const TodoPage: React.FC = () => {
                 }
             }
         })();
-    }, []);
-
-    useEffect(() => {
-        if (!localStorage.getItem(TOKEN)) {
-            navigate(`/${PATH.signIn}`);
-        }
     }, [navigate]);
 
     return (
