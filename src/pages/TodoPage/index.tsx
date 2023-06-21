@@ -14,6 +14,18 @@ export const TodoPage: React.FC = () => {
     const [todos, setTodos] = useState<Todo[]>([]);
     const [newTodoInput, setNewTodoInput] = useState("");
 
+    const updateTodo = (updatedTodo: Todo) => {
+        setTodos((prevTodos) =>
+            prevTodos.map((todo) =>
+                todo.id === updatedTodo.id ? updatedTodo : todo
+            )
+        );
+    };
+
+    const deleteTodo = (id: number) => {
+        setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+    };
+
     const handleAddTodo = async () => {
         try {
             const response = await createTodo(newTodoInput);
@@ -36,19 +48,17 @@ export const TodoPage: React.FC = () => {
         navigate(`/${PATH.signIn}`);
     };
 
-    const getTodoList = async () => {
-        try {
-            const response = await getTodos();
-            setTodos(response?.data);
-        } catch (error) {
-            if (error instanceof AxiosError) {
-                alert(error.response?.data.message);
-            }
-        }
-    };
-
     useEffect(() => {
-        getTodoList();
+        (async function () {
+            try {
+                const response = await getTodos();
+                setTodos(response?.data);
+            } catch (error) {
+                if (error instanceof AxiosError) {
+                    alert(error.response?.data.message);
+                }
+            }
+        })();
     }, []);
 
     useEffect(() => {
@@ -87,7 +97,8 @@ export const TodoPage: React.FC = () => {
                                     id={todo.id}
                                     todo={todo.todo}
                                     isCompleted={todo.isCompleted}
-                                    refetchTodo={getTodoList}
+                                    updateTodo={updateTodo}
+                                    deleteTodo={deleteTodo}
                                 />
                             );
                         })}

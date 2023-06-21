@@ -1,23 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import { Todo } from "../utils/types";
-import { deleteTodo, updateTodo } from "api/lib/todo";
+import {
+    deleteTodo as deleteTodoApi,
+    updateTodo as updateTodoApi,
+} from "api/lib/todo";
 import styled from "styled-components";
 import { COLOR, FONT_SIZE } from "styles/constants";
 
 interface TodoItemProps extends Todo {
-    // userId: number;
-    // status: TodoStatus; //추가
-    refetchTodo: () => void;
+    updateTodo: (updatedTodo: Todo) => void;
+    deleteTodo: (id: number) => void;
 }
 
-/**
- * 컴포넌트
- */
 export const TodoItem: React.FC<TodoItemProps> = ({
     id,
     todo,
     isCompleted,
-    refetchTodo,
+    updateTodo,
+    deleteTodo,
 }) => {
     const [isInModify, setIsInModify] = useState(false);
     const [modifiedInput, setModifiedInput] = useState(todo);
@@ -30,12 +30,13 @@ export const TodoItem: React.FC<TodoItemProps> = ({
     const handleSave = async () => {
         if (modifiedInput.length === 0) {
             alert("내용물을 입력해주세요");
+            inputRef.current?.focus();
             return;
         }
         try {
-            await updateTodo(id, modifiedInput, isCompleted);
-            refetchTodo();
+            await updateTodoApi(id, modifiedInput, isCompleted);
             setIsInModify(false);
+            updateTodo({ id, isCompleted, todo: modifiedInput });
         } catch (error) {
             alert(error);
         }
@@ -51,7 +52,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
         e
     ) => {
         const isChecked = e.currentTarget.checked;
-        updateTodo(id, todo, isChecked);
+        updateTodoApi(id, todo, isChecked);
     };
 
     const handleCancel: React.MouseEventHandler<HTMLButtonElement> = () => {
@@ -64,8 +65,8 @@ export const TodoItem: React.FC<TodoItemProps> = ({
     > = async () => {
         if (!window.confirm("정말 삭제하시겠습니까?")) return;
         try {
-            await deleteTodo(id);
-            refetchTodo();
+            await deleteTodoApi(id);
+            deleteTodo(id);
         } catch (error) {
             alert(error);
         }
