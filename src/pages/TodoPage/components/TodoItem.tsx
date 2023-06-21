@@ -7,7 +7,7 @@ import { COLOR, FONT_SIZE } from "styles/constants";
 interface TodoItemProps extends Todo {
     // userId: number;
     // status: TodoStatus; //추가
-    onUpdate: () => void;
+    refetchTodo: () => void;
 }
 
 /**
@@ -17,7 +17,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
     id,
     todo,
     isCompleted,
-    onUpdate,
+    refetchTodo,
 }) => {
     const [isInModify, setIsInModify] = useState(false);
     const [modifiedInput, setModifiedInput] = useState(todo);
@@ -28,13 +28,17 @@ export const TodoItem: React.FC<TodoItemProps> = ({
     };
 
     const handleSave = async () => {
-        // const inputValue = inputRef?.current;
-        // console.dir("inputValue :>> ", inputRef.current);
-        console.log("modifiedInput :>> ", modifiedInput);
-        const response = await updateTodo(id, modifiedInput, isCompleted);
-        console.log("response(updatetodo) :>> ", response);
-        setIsInModify(false); // 안해도 될듯..?아니군..
-        onUpdate();
+        if (modifiedInput.length === 0) {
+            alert("내용물을 입력해주세요");
+            return;
+        }
+        try {
+            await updateTodo(id, modifiedInput, isCompleted);
+            refetchTodo();
+            setIsInModify(false);
+        } catch (error) {
+            alert(error);
+        }
     };
 
     const handleChangeInput: React.ChangeEventHandler<HTMLInputElement> = (
@@ -46,12 +50,8 @@ export const TodoItem: React.FC<TodoItemProps> = ({
     const handleCheck: React.MouseEventHandler<HTMLInputElement> = async (
         e
     ) => {
-        console.log("e.currentTarget.checked :>> ", e.currentTarget.checked);
-        console.log("modifiedInput :>> ", modifiedInput);
         const isChecked = e.currentTarget.checked;
-        const response = await updateTodo(id, todo, isChecked);
-        console.log("response(check) :>> ", response);
-        // onUpdate(); // 삭선 처리 위함인데 너무너무 느려서 css로 삭선 넣어줘야할듯
+        updateTodo(id, todo, isChecked);
     };
 
     const handleCancel: React.MouseEventHandler<HTMLButtonElement> = () => {
@@ -63,9 +63,12 @@ export const TodoItem: React.FC<TodoItemProps> = ({
         HTMLButtonElement
     > = async () => {
         if (!window.confirm("정말 삭제하시겠습니까?")) return;
-        const response = await deleteTodo(id);
-        console.log("response(delete):>> ", response);
-        onUpdate();
+        try {
+            await deleteTodo(id);
+            refetchTodo();
+        } catch (error) {
+            alert(error);
+        }
     };
 
     useEffect(() => {

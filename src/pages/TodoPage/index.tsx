@@ -7,24 +7,22 @@ import styled, { css } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { PATH, TOKEN } from "common/utils/constants";
 import { COLOR, FONT_SIZE } from "styles/constants";
+import { AxiosError } from "axios";
 
 export const TodoPage: React.FC = () => {
     const navigate = useNavigate();
     const [todos, setTodos] = useState<Todo[]>([]);
     const [newTodoInput, setNewTodoInput] = useState("");
-    const [todoUpdated, setTodoUpdated] = useState(false);
-
-    const handleUpdate = () => {
-        setTodoUpdated(!todoUpdated);
-    };
 
     const handleAddTodo = async () => {
-        const response = await createTodo(newTodoInput);
-        setNewTodoInput("");
-        console.log("response(addTodo) :>> ", response);
-        const addedTodo = response.data;
-        console.log("addedTodo :>> ", addedTodo);
-        setTodos([...todos, addedTodo]);
+        try {
+            const response = await createTodo(newTodoInput);
+            setNewTodoInput("");
+            const addedTodo = response.data;
+            setTodos([...todos, addedTodo]);
+        } catch (error) {
+            alert(error);
+        }
     };
 
     const handleChangeInput: React.ChangeEventHandler<HTMLInputElement> = (
@@ -38,14 +36,20 @@ export const TodoPage: React.FC = () => {
         navigate(`/${PATH.signIn}`);
     };
 
-    useEffect(() => {
-        (async function () {
+    const getTodoList = async () => {
+        try {
             const response = await getTodos();
-            console.log("response(getTodo):>> ", response);
-            setTodos(response.data);
-            // 401 응답: Unauthorizaed - 로그인 토큰 잘못된 경우
-        })();
-    }, [todoUpdated]);
+            setTodos(response?.data);
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                alert(error.response?.data.message);
+            }
+        }
+    };
+
+    useEffect(() => {
+        getTodoList();
+    }, []);
 
     useEffect(() => {
         if (!localStorage.getItem(TOKEN)) {
@@ -83,7 +87,7 @@ export const TodoPage: React.FC = () => {
                                     id={todo.id}
                                     todo={todo.todo}
                                     isCompleted={todo.isCompleted}
-                                    onUpdate={handleUpdate}
+                                    refetchTodo={getTodoList}
                                 />
                             );
                         })}
