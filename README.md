@@ -17,4 +17,21 @@
     $ npm start
     ```
 
+## 데모 영상
+<table>
+  <tr>
+      <td>
+          <img src="https://github.com/sonmansu/wanted-pre-onboarding-frontend/assets/80534651/de6c3aa3-5a0b-4a97-a384-0d40c3c27555" alt="회원가입, 로그인" width="500px"/>
+      </td>
+      <td>
+          <img src="https://github.com/sonmansu/wanted-pre-onboarding-frontend/assets/80534651/0d9ff423-8f94-4def-8238-ce07c1cb5d88" alt="투두리스트" width="500px"/>
+      </td>
+  </tr>
+  <tr>
+      <td align="center" class="comment">회원가입, 로그인 페이지</td>
+      <td align="center" class="comment">투두리스트 페이지</td>
+  </tr>
+    
+</table>
+          
 
