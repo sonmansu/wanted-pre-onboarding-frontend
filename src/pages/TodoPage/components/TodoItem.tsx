@@ -42,27 +42,21 @@ export const TodoItem: React.FC<TodoItemProps> = ({
         }
     };
 
-    const handleChangeInput: React.ChangeEventHandler<HTMLInputElement> = (
-        e
-    ) => {
+    const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setModifiedInput(e.currentTarget.value);
     };
 
-    const handleCheck: React.MouseEventHandler<HTMLInputElement> = async (
-        e
-    ) => {
+    const handleCheck = async (e: React.MouseEvent<HTMLInputElement>) => {
         const isChecked = e.currentTarget.checked;
         updateTodoApi(id, todo, isChecked);
     };
 
-    const handleCancel: React.MouseEventHandler<HTMLButtonElement> = () => {
+    const handleCancel = () => {
         setIsInModify(false);
         setModifiedInput(todo); // 원래 값으로 복구
     };
 
-    const handleDelete: React.MouseEventHandler<
-        HTMLButtonElement
-    > = async () => {
+    const handleDelete = async () => {
         if (!window.confirm("정말 삭제하시겠습니까?")) return;
         try {
             await deleteTodoApi(id);
@@ -78,7 +72,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
         }
     }, [isInModify]);
 
-    return isInModify ? (
+    return (
         <ListItem key={id}>
             <Label>
                 <CheckBox
@@ -86,54 +80,52 @@ export const TodoItem: React.FC<TodoItemProps> = ({
                     defaultChecked={isCompleted}
                     onClick={handleCheck}
                 />
-                <ModifyInput
-                    type="text"
-                    ref={inputRef}
-                    data-testid="modify-input"
-                    value={modifiedInput}
-                    onChange={(e) => handleChangeInput(e)}
-                />
+                <Text>
+                    {isInModify ? (
+                        <ModifyInput
+                            type="text"
+                            ref={inputRef}
+                            data-testid="modify-input"
+                            value={modifiedInput}
+                            onChange={(e) => handleChangeInput(e)}
+                        />
+                    ) : (
+                        todo
+                    )}
+                </Text>
             </Label>
-            <Button data-testid="submit-button" onClick={handleSave}>
-                제출
-            </Button>
-            <Button data-testid="cancel-button" onClick={handleCancel}>
-                취소
-            </Button>
-        </ListItem>
-    ) : (
-        <ListItem key={id}>
-            <Label>
-                <CheckBox
-                    type="checkbox"
-                    defaultChecked={isCompleted}
-                    onClick={handleCheck}
-                />
-                <Text>{todo}</Text>
-            </Label>
-
-            <Button
-                data-testid="modify-button"
-                onClick={() => handleClickModify()}
-            >
-                수정
-            </Button>
-            <Button data-testid="delete-button" onClick={handleDelete}>
-                삭제
-            </Button>
+            {isInModify ? (
+                <>
+                    <Button data-testid="submit-button" onClick={handleSave}>
+                        제출
+                    </Button>
+                    <Button data-testid="cancel-button" onClick={handleCancel}>
+                        취소
+                    </Button>
+                </>
+            ) : (
+                <>
+                    <Button
+                        data-testid="modify-button"
+                        onClick={() => handleClickModify()}
+                    >
+                        수정
+                    </Button>
+                    <Button data-testid="delete-button" onClick={handleDelete}>
+                        삭제
+                    </Button>
+                </>
+            )}
         </ListItem>
     );
 };
 
 const ListItem = styled.li`
-    list-style: none;
-    /* list-style-type: none; */
-
     display: flex;
     align-items: center;
 
-    /* background-color: yellow; */
     font-size: 20px;
+    list-style: none;
 
     & + & {
         margin-top: 10px;
@@ -150,7 +142,6 @@ const Label = styled.label`
 const CheckBox = styled.input`
     width: 20px;
     height: 20px;
-    /* accent-color: ${COLOR.grey[400]}; */
 
     margin-right: 10px;
 
@@ -166,18 +157,15 @@ const Text = styled.span`
 `;
 
 const ModifyInput = styled.input`
-    flex: 0.9;
-    font-size: ${FONT_SIZE.m2};
+    width: 100%;
 `;
 
 const Button = styled.button`
     padding: 5px 7px;
-    /* border: 1px solid #ff8d4e; */
     border-radius: 5px;
 
     background-color: ${COLOR.grey[200]};
 
-    /* color: white; */
     font-size: ${FONT_SIZE.s3};
 
     & + & {

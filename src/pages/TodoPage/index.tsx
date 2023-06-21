@@ -30,16 +30,14 @@ export const TodoPage: React.FC = () => {
         try {
             const response = await createTodo(newTodoInput);
             setNewTodoInput("");
-            const addedTodo = response.data;
-            setTodos([...todos, addedTodo]);
+            const newTodo = response.data;
+            setTodos([...todos, newTodo]);
         } catch (error) {
             alert(error);
         }
     };
 
-    const handleChangeInput: React.ChangeEventHandler<HTMLInputElement> = (
-        e
-    ) => {
+    const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewTodoInput(e.currentTarget.value);
     };
 
@@ -107,7 +105,6 @@ export const TodoPage: React.FC = () => {
 };
 
 const Wrap = styled.div`
-    /* background-color: yellow; */
     height: 100%;
     display: flex;
     justify-content: center;
@@ -115,7 +112,6 @@ const Wrap = styled.div`
 `;
 
 const ContentWrap = styled.div`
-    /* background-color: aqua; */
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -136,17 +132,11 @@ const NewTodoWrap = styled.div`
 
 const NewTodoInput = styled(AuthInput)`
     flex: 1;
-    /* flex-grow: 1; */
 `;
 const TodoListWrap = styled.div`
-    /* background-color: aliceblue; */
     width: 100%;
     height: 300px;
     overflow: auto;
-    /* width: 500px;
-
-    border: 1px solid gray;
-    border-radius: 8px; */
 `;
 
 const AddBtn = styled.button`

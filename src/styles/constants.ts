@@ -21,4 +21,4 @@ export const FONT_SIZE = {
     l1: "32px",
     l2: "40px",
     l3: "48px",
-};
+} as const;

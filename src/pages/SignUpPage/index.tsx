@@ -29,35 +29,19 @@ export const SignUpPage: React.FC = () => {
     let isValidEmail = form.email.includes("@");
     let isValidPassword = form.password.length >= 8;
 
-    const handleChangeInput: React.ChangeEventHandler<HTMLInputElement> = (
-        e
-    ) => {
+    const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.currentTarget.value;
         const key = e.currentTarget.dataset.testid?.split("-")[0] ?? "";
-        setForm((prevState) => {
-            return {
-                ...prevState,
-                [key]: value,
-            };
-        });
+        setForm((prevState) => ({ ...prevState, [key]: value }));
     };
 
-    const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (
-        event
-    ) => {
-        event.preventDefault();
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         try {
-            const response = await signUp(form.email, form.password);
-            console.log("response :>> ", response);
-
-            if (response.status === 201) {
-                // created
-                navigate(`/${PATH.signIn}`);
-            }
+            await signUp(form.email, form.password);
+            navigate(`/${PATH.signIn}`);
         } catch (error) {
-            console.log("error :>> ", error);
             if (error instanceof AxiosError) {
-                // 400: 동일한 이메일이 존재
                 alert(error.response?.data.message);
             }
         }
@@ -85,6 +69,7 @@ export const SignUpPage: React.FC = () => {
                     </ErrorMessage>
                 )}
                 <AuthInput
+                    type="password"
                     data-testid="password-input"
                     placeholder="비밀번호를 입력해주세요"
                     onChange={handleChangeInput}

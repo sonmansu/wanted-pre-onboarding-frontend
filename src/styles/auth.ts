@@ -65,8 +65,8 @@ export const AuthBtn = styled.button<{ disabled: boolean }>`
 
 export const ErrorMessage = styled.div`
     padding: 7px 0 10px 0;
-    /* background-color: aqua; */
     width: 100%;
+
     font-weight: 400;
     font-size: 16px;
     font-size: ${FONT_SIZE.s3};
