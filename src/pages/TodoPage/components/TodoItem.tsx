@@ -3,7 +3,7 @@ import { Todo } from "../utils/types";
 import {
     deleteTodo as deleteTodoApi,
     updateTodo as updateTodoApi,
-} from "api/lib/todo";
+} from "apis/lib/todo";
 import styled from "styled-components";
 import { COLOR, FONT_SIZE } from "styles/constants";
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { signIn } from "../../api/lib/auth";
+import { signIn } from "../../apis/lib/auth";
 import { useNavigate } from "react-router-dom";
 import { TOKEN, PATH } from "../../common/utils/constants";
 import { AxiosError } from "axios";

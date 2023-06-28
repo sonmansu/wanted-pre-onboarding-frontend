@@ -1,4 +1,4 @@
-import { createTodo, getTodos } from "api/lib/todo";
+import { createTodo, getTodos } from "apis/lib/todo";
 import { useEffect, useState } from "react";
 import { Todo } from "./utils/types";
 import { TodoItem } from "./components/TodoItem";
