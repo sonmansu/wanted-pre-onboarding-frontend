@@ -14,6 +14,7 @@ import {
     StyledLink,
     Wrap,
 } from "styles/auth";
+import { AuthForm } from "common/utils/types";
 
 /**
  * 로그인 페이지
@@ -21,7 +22,7 @@ import {
 export const SignInPage: React.FC = () => {
     const navigate = useNavigate();
 
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<AuthForm>({
         email: "",
         password: "",
     });

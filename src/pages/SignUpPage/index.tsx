@@ -14,6 +14,7 @@ import {
     StyledLink,
     ErrorMessage,
 } from "styles/auth";
+import { AuthForm } from "common/utils/types";
 
 /**
  * 회원가입 페이지
@@ -21,7 +22,7 @@ import {
 export const SignUpPage: React.FC = () => {
     const navigate = useNavigate();
 
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<AuthForm>({
         email: "",
         password: "",
     });
